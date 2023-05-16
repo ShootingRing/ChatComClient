@@ -10,25 +10,18 @@ public class Response implements Serializable {
     private static final long serialVersionUID = -8504915906614662334L;
     public ResponseCode code;
     public String message;
-    public String data;
+    public Object data;
 
     public Response(ResponseCode code, String message, Object data){
         this.code = code;
         this.message = message;
-        this.data = gson.toJson(data);
+        this.data = data;
     }
 
     public void response(Socket socket) {
         try (
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
         ){
-            //返回response
-//            String res = gson.toJson(this);
-//
-//            if(!res.endsWith("\n")) {
-//                res += "\n";
-//            }
-
             oos.writeObject(this);
             oos.flush();
         }catch (IOException e){

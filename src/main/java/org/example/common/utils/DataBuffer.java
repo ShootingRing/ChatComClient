@@ -19,5 +19,5 @@ public class DataBuffer {
     public static ObjectOutputStream oos;
     public static ObjectInputStream ois;
 
-    public static User user;
+    public static User userInfo;
 }

@@ -38,13 +38,11 @@ public class Request implements Serializable {
             oos.writeObject(request);
             oos.flush();
             System.out.println("message:" + this.type);
-
             //读取response
             Response response = (Response) ois.readObject();
 
             //TODO 处理response
             System.out.println("response:" + gson.toJson(response));
-
 
             //response返回
             return response;

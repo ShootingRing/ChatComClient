@@ -16,7 +16,6 @@ public class SocketClient {
     public static void main(String[] args) throws Exception {
         //建立Socket连接
         //Socket socket = new Socket("47.98.44.250", 5208);
-
         try {
             socket = new Socket("127.0.0.1", 5208);
             System.out.println(name + " linking...");
