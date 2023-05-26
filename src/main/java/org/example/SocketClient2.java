@@ -1,8 +1,4 @@
 package org.example;
-
-import org.example.client.threads.ClientGetThread;
-import org.example.client.threads.ClientSendThread;
-
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -15,9 +11,6 @@ public class SocketClient2 {
         System.out.println(name + " linking...");
         pw.println(name + " come!!!");
         pw.flush();
-
-        new Thread(new ClientSendThread(socket, name)).start();
-        new Thread(new ClientGetThread(socket)).start();
 
         Thread t = new Thread(() -> {
             try  {

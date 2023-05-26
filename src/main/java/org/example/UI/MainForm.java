@@ -2,20 +2,26 @@ package org.example.UI;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
+import org.example.client.threads.ChatThread;
 import org.example.common.entities.Login;
 import org.example.common.entities.Register;
 import org.example.common.entities.User;
+import org.example.common.utils.Request;
 import org.example.common.utils.Response;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.Objects;
 
-import static org.example.common.utils.DataBuffer.gson;
-import static org.example.common.utils.DataBuffer.userInfo;
+import static org.example.common.utils.DataBuffer.*;
+import static org.example.common.utils.RequestType.HELLO;
 
 public class MainForm {
+    private JFrame frame;
     private JPanel loginPanel;
     private JButton loginButton;
     private JButton registerButton;
@@ -36,6 +42,8 @@ public class MainForm {
 
     public MainForm() {
         FlatDarculaLaf.install();
+
+        frame = new JFrame("ChatCom");
 
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
@@ -74,7 +82,16 @@ public class MainForm {
                         JOptionPane.showMessageDialog(new JFrame(), "登陆成功！","登陆成功", JOptionPane.ERROR_MESSAGE);
 
                         userInfo = (User) res.data;
+
+                        Request hello = new Request(
+                                HELLO,
+                                userInfo.uuid
+                        );
+                        hello.requestWithNoResponse(); //建立连接后发送HELLO请求
+
                         System.out.println("userInfo: " + gson.toJson(userInfo));
+
+                        login(userInfo);
                     }
 
                     case WRONG_PASSWORD_OR_ACCOUNT -> {
@@ -168,8 +185,6 @@ public class MainForm {
 
 
     public void createAndShow() {
-        JFrame frame = new JFrame("ChatCom");
-
         MainForm mainForm = new MainForm();
         frame.setContentPane(mainForm.wrapper);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -180,5 +195,18 @@ public class MainForm {
 
     public void showMessage(String message, String title, int messageType){
         JOptionPane.showMessageDialog(new JFrame(), message, title, messageType);
+    }
+
+    public void login(User user){
+        //视图操作函数
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            try {
+                new ChatForm().createAndShow();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        frame.setVisible(false);
+        frame.dispose();
     }
 }

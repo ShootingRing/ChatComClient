@@ -38,12 +38,11 @@ public class Request implements Serializable {
             oos.writeObject(request);
             oos.flush();
             System.out.println("message:" + this.type);
+
             //读取response
             Response response = (Response) ois.readObject();
 
-            //TODO 处理response
             System.out.println("response:" + gson.toJson(response));
-
             //response返回
             return response;
 
@@ -59,4 +58,44 @@ public class Request implements Serializable {
                 null
         );
     }
+
+    public void chatRequest() throws IOException {
+        try {
+            //使用writeObject发送
+            Request request = new Request(
+                    this.type,
+                    this.content
+            );
+
+            System.out.println("content:"+gson.toJson(content));
+
+            coos.writeObject(request);
+            coos.flush();
+            System.out.println("message:" + this.type);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void requestWithNoResponse() throws IOException {
+        try {
+            //使用writeObject发送
+            Request request = new Request(
+                    this.type,
+                    this.content
+            );
+
+            System.out.println("content:"+gson.toJson(content));
+
+            coos.writeObject(request);
+            coos.flush();
+            System.out.println("message:" + this.type);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
+
+

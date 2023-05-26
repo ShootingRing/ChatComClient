@@ -1,9 +1,7 @@
 package org.example;
 
 import org.example.UI.MainForm;
-import org.example.client.threads.ClientThread;
-import org.example.common.utils.DataBuffer;
-import org.example.common.utils.Response;
+import org.example.client.threads.ChatThread;
 
 import javax.swing.*;
 import java.io.*;
@@ -21,6 +19,13 @@ public class SocketClient {
             System.out.println(name + " linking...");
             oos = new ObjectOutputStream(socket.getOutputStream());
             ois = new ObjectInputStream(socket.getInputStream());
+
+            chatSocket = new Socket("127.0.0.1", 5210);
+            System.out.println(name + " linking chat server...");
+            coos = new ObjectOutputStream(chatSocket.getOutputStream());
+            cois = new ObjectInputStream(chatSocket.getInputStream());
+
+            new Thread(new ChatThread()).start(); //打开聊天线程，等待响应
         } catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(),
                     "连接失败，请检查网络环境后重试！","连接失败", JOptionPane.ERROR_MESSAGE);//否则连接失败
@@ -29,6 +34,5 @@ public class SocketClient {
 
         //启动UI界面
         javax.swing.SwingUtilities.invokeLater(() -> new MainForm().createAndShow());
-
     }
 }
